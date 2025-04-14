@@ -339,5 +339,89 @@ namespace MathLibrary
             double num = CheckContentsForDouble(number);
             return Sqrt(num);
         }
+
+        /// <summary>
+        /// Складывает числа как строки (конкатенация) и возвращает результат как double.
+        /// </summary>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
+        /// <returns>Результат "склеивания" чисел</returns>
+        public static double SuperSum(int a, int b)
+        {
+            string concatenated = $"{a}{b}";
+            return double.Parse(concatenated);
+        }
+
+        /// <summary>
+        /// Складывает числа как строки (конкатенация) и возвращает результат как double.
+        /// </summary>
+        /// <param name="a">Первое число</param>
+        /// <param name="b">Второе число</param>
+        /// <returns>Результат "склеивания" чисел</returns>
+        public static double SuperSum(double a, double b)
+        {
+            string concatenated = $"{a}{b}";
+            return double.Parse(concatenated);
+        }
+
+        /// <summary>
+        /// Складывает строки как числа (конкатенация) и возвращает результат как double.
+        /// </summary>
+        /// <param name="a">Первое число (строка)</param>
+        /// <param name="b">Второе число (строка)</param>
+        /// <returns>Результат "склеивания" чисел</returns>
+        /// <exception cref="ArgumentException">Если строки не являются числами</exception>
+        public static double SuperSum(string a, string b)
+        {
+            double numberA = CheckContentsForDouble(a);
+            double numberB = CheckContentsForDouble(b);
+            string concatenated = $"{numberA}{numberB}";
+            return double.Parse(concatenated);
+        }
+
+        /// <summary>
+        /// Вычисляет результат математического выражения из строки.
+        /// Поддерживает операции: +, -, *, / (без учёта приоритетов, вычисление слева направо).
+        /// </summary>
+        /// <param name="expression">Строка с выражением (например, "2 + 2 * 4")</param>
+        /// <returns>Результат вычисления</returns>
+        /// <exception cref="ArgumentException">Если выражение некорректно</exception>
+        public static double Calculator(string expression)
+        {
+            string[] parts = expression.Split([' '], StringSplitOptions.RemoveEmptyEntries);
+
+            if (parts.Length < 3 || parts.Length % 2 == 0)
+                throw new ArgumentException("Некорректное выражение. Пример: \"2 + 2 * 4\"", nameof(expression));
+
+            double result = CheckContentsForDouble(parts[0]);
+
+            for (int i = 1; i < parts.Length; i += 2)
+            {
+                string op = parts[i];
+                double nextNum = CheckContentsForDouble(parts[i + 1]);
+
+                switch (op)
+                {
+                    case "+":
+                        result += nextNum;
+                        break;
+                    case "-":
+                        result -= nextNum;
+                        break;
+                    case "*":
+                        result *= nextNum;
+                        break;
+                    case "/":
+                        if (nextNum == 0)
+                            throw new DivideByZeroException("Деление на ноль невозможно.");
+                        result /= nextNum;
+                        break;
+                    default:
+                        throw new ArgumentException($"Неподдерживаемая операция: {op}", nameof(expression));
+                }
+            }
+
+            return result;
+        }
     }
 }
